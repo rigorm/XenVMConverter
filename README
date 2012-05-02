@@ -1,0 +1,46 @@
+XenVmConverter :
+
+Convert a Citrix XenServer (tested on xenserver 6.0) LVM to a Xen .img file or into a LV.
+
+type : ./convert.sh --help to get the list of commands.
+
+or this list (its the same)
+
+                #----------------------------------------------------------
+                # XenVmConverter : command reference
+                #----------------------------------------------------------
+
+                Parameters: (prameters with a * are required)
+                        --ip <ipaddr>           : xenserver's IP (or pool master's in xenserver mode)
+                        --user <user>           : the xenserver's user (usually root) (*)
+                        --password <passwd>     : the xenserver's password (*)
+                        --uuid <uuid>           : a VM's UUID (when stopped) OR a snapshot UUID
+                        --help                  : this text (dah!)
+                        --lvm                   : activate lvm mode (import image into LVM)
+                        --vg <vg name>          : in lvm mode, give the volume group name
+                        --force                 : in lvm mode, delete the LV first
+                        --xensource             : activate xenserver auto snapshot/batch export
+                        --vmlist <path/list>    : text file with a list of VM names
+                        --vmname <name>         : a single VM name
+                        --image <image name>    : when in standalone, the .img file, when in LVM, the LV's name. Destination file will be in /images
+
+                when using:
+                        --lvm:
+                                --image <image name>    : will be the name of the LV (logical volume) name
+                                --vg <vg name>          : the Volume group name (without the /dev/ part) make sure the VG is visable/active
+                                --force                 : Will delete the LV if it exist before importing
+
+                        --xenserver (create a snapshot of the vm first / enable batch mode):
+                                --ip <ipaddr>           : this need to be the master pool address (when in pool mode)
+                                --vmname <VM name>      : The virtual server's name label (note: use double quotes and there are spaces in the name)
+                                --vmlist <path/list>    : use a text file (one VM name per line) to do in bach mode
+                                (note #1: use --vmname OR --vmlist but not both)
+                                (note #2: this mode could fail if you have multiple interfaces and/or bonded. If you have multiple interfaces,
+                                          it will use the first one that has a IP and is not the management interface.
+
+                        standalone, you need:
+                                --ip    (the xenserver's IP. (not the pool master's. Pool master IP only when in --xenserver mode))
+                                --user
+                                --password
+                                --uuid  (make sure the VM is stopped OR you are using a snapshot)
+                                --image optional(when not used, you will get a image1.img file)
